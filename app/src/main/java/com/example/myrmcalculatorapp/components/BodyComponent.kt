@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.myrmcalculatorapp.views.HomeView
 
 
@@ -70,7 +71,7 @@ fun MainButton(
             .fillMaxWidth()
             .padding(horizontal = 30.dp)
     ) {
-        Text (text=text)
+        Text (text=text, fontSize = 18.sp)
        
    }
     
