@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MyRmCalculatorApp</string>
+    <string name="app_name">Calculadora RM</string>
     <string name="cleanValues">Limpiar</string>
     <string name="repetitions">Repeticiones</string>
     <string name="weigth">Peso</string>
     <string name="calculate">Calcular</string>
+    <string name="calculatorTitle">Calculadora</string>
 </resources>

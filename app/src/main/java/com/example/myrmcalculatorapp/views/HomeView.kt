@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -64,9 +65,9 @@ fun ContentHomeView(paddingValues: PaddingValues) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var weigth by remember { mutableStateOf("") }
-        var repsNumber by remember { mutableStateOf("")}
-        var rm1 by remember {mutableStateOf(0.0)}
+        var weigth by rememberSaveable { mutableStateOf("") }
+        var repsNumber by rememberSaveable { mutableStateOf("")}
+        var rm1 by rememberSaveable {mutableStateOf(0.0)}
         MainTextField(
             value = weigth,
             onValueChange = { weigth = it },
