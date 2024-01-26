@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">MyRmCalculatorApp</string>
+    <string name="cleanValues">Clean</string>
+    <string name="repetitions">Repetitions</string>
+    <string name="weigth">Weigth</string>
+    <string name="calculate">Calculate</string>
+    <string name="calculatorTitle">Calculator</string>
 </resources>
