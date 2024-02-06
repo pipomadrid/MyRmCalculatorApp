@@ -13,12 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +27,6 @@ import com.example.myrmcalculatorapp.components.MainButton
 import com.example.myrmcalculatorapp.components.MainTextField
 import com.example.myrmcalculatorapp.components.SevenCards
 import com.example.myrmcalculatorapp.components.SpacerH
-import kotlin.math.round
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,22 +35,24 @@ fun HomeView() {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(
             title = {
-                Text(text = stringResource(R.string.calculatorTitle), color = MaterialTheme.colorScheme.onPrimary, fontSize = 20.sp)
+                Text(
+                    text = stringResource(R.string.calculatorTitle),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 20.sp
+                )
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary
             )
-
         )
-
     }) {
-        ContentHomeView(it)
+        ContentHomeView(it, HomeViewModel())
     }
 
 }
 
 @Composable
-fun ContentHomeView(paddingValues: PaddingValues) {
+fun ContentHomeView(paddingValues: PaddingValues,homeViewModel:HomeViewModel) {
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -65,32 +61,31 @@ fun ContentHomeView(paddingValues: PaddingValues) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var weigth by rememberSaveable { mutableStateOf("") }
-        var repsNumber by rememberSaveable { mutableStateOf("")}
-        var rm1 by rememberSaveable {mutableStateOf(0.0)}
+        val weigth:Int by homeViewModel.weigth.observeAsState(initial = 0)
+        val repsNumber:Int by homeViewModel.repsNumber.observeAsState(initial = 0)
+        val rm1 :Double by homeViewModel.rm1.observeAsState(initial = 0.0)
         MainTextField(
-            value = weigth,
-            onValueChange = { weigth = it },
+            value = if(weigth>0)weigth.toString()else "",
+            onValueChange = { homeViewModel.onTextChange(it.toInt(),repsNumber)},
             label = stringResource(R.string.weigth),
             ImeAction.Next,
             true)
         SpacerH()
         MainTextField(
-            value = repsNumber,
-            onValueChange = { repsNumber = it },
+            value = if(repsNumber>0)repsNumber.toString()else "",
+            onValueChange = {  homeViewModel.onTextChange(weigth,it.toInt()) },
             label = stringResource(R.string.repetitions),
             ImeAction.Done,
             true)
         SpacerH(36)
         MainButton(text = stringResource(R.string.calculate), onClick = {
-            rm1 = calculateRm(weigth,repsNumber)
+            homeViewModel.calculateRm()
 
         })
         SpacerH()
         MainButton(text = stringResource(R.string.cleanValues), Color.Black, onClick = {
-            weigth = ""
-            repsNumber= ""
-            rm1 = 0.0
+            homeViewModel.onTextChange(0,0)
+            homeViewModel.calculateRm()
         })
         SpacerH()
         SevenCards(rm1)
@@ -105,13 +100,5 @@ fun HomePreview() {
     HomeView()
 }
 
-fun calculateRm(weigth: String,repsNumber:String):Double {
-    return if(weigth.isNotEmpty()  || repsNumber.isNotEmpty() ){
-        val weigthDouble = weigth.toDouble()
-        val repsNumberDouble = repsNumber.toDouble()
-        val rm1 = weigthDouble / (1.0278 - (0.0278 * repsNumberDouble))
-        round(rm1 * 100) / 100.0
-    }else 0.0
 
-}
 
