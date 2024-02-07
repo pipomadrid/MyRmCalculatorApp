@@ -12,8 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,19 +59,19 @@ fun ContentHomeView(paddingValues: PaddingValues,homeViewModel:HomeViewModel) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val weigth:Int by homeViewModel.weigth.observeAsState(initial = 0)
+      /*  val weigth:Int by homeViewModel.weigth.observeAsState(initial = 0)
         val repsNumber:Int by homeViewModel.repsNumber.observeAsState(initial = 0)
-        val rm1 :Double by homeViewModel.rm1.observeAsState(initial = 0.0)
+        val rm1 :Double by homeViewModel.rm1.observeAsState(initial = 0.0)*/
         MainTextField(
-            value = if(weigth>0)weigth.toString()else "",
-            onValueChange = { homeViewModel.onTextChange(it.toInt(),repsNumber)},
+            value = homeViewModel.getWeigthString(),
+            onValueChange = { homeViewModel.onTextChange(it.toIntOrNull()?:0,"w")},
             label = stringResource(R.string.weigth),
             ImeAction.Next,
             true)
         SpacerH()
         MainTextField(
-            value = if(repsNumber>0)repsNumber.toString()else "",
-            onValueChange = {  homeViewModel.onTextChange(weigth,it.toInt()) },
+            value = homeViewModel.getRepsString(),
+            onValueChange = {  homeViewModel.onTextChange(it.toIntOrNull()?:0,"r") },
             label = stringResource(R.string.repetitions),
             ImeAction.Done,
             true)
@@ -84,11 +82,11 @@ fun ContentHomeView(paddingValues: PaddingValues,homeViewModel:HomeViewModel) {
         })
         SpacerH()
         MainButton(text = stringResource(R.string.cleanValues), Color.Black, onClick = {
-            homeViewModel.onTextChange(0,0)
+            homeViewModel.onClean()
             homeViewModel.calculateRm()
         })
         SpacerH()
-        SevenCards(rm1)
+        SevenCards(homeViewModel.state.rm1)
 
     }
 
